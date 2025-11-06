@@ -1,0 +1,122 @@
+version: '3.8'
+
+services:
+  # API Gateway
+  api-gateway:
+    build:
+      context: ../../services/api-gateway
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=development
+      - PORT=3001
+      - MARKETPLACE_SERVICE_URL=http://marketplace:3002
+      - ORDER_SERVICE_URL=http://orders:3003
+      - WALLET_SERVICE_URL=http://wallet:3004
+      - AUTH_SERVICE_URL=http://auth:3005
+      - LOGISTICS_SERVICE_URL=http://logistics:3006
+    depends_on:
+      - marketplace
+      - orders
+      - wallet
+      - auth
+      - logistics
+    networks:
+      - linked-all-network
+
+  # Marketplace Service
+  marketplace:
+    build:
+      context: ../../services/marketplace
+      dockerfile: Dockerfile
+    ports:
+      - "3002:3002"
+    environment:
+      - NODE_ENV=development
+      - PORT=3002
+    networks:
+      - linked-all-network
+
+  # Orders Service
+  orders:
+    build:
+      context: ../../services/orders
+      dockerfile: Dockerfile
+    ports:
+      - "3003:3003"
+    environment:
+      - NODE_ENV=development
+      - PORT=3003
+    networks:
+      - linked-all-network
+
+  # Wallet Service
+  wallet:
+    build:
+      context: ../../services/wallet
+      dockerfile: Dockerfile
+    ports:
+      - "3004:3004"
+    environment:
+      - NODE_ENV=development
+      - PORT=3004
+    networks:
+      - linked-all-network
+
+  # Auth Service
+  auth:
+    build:
+      context: ../../services/auth
+      dockerfile: Dockerfile
+    ports:
+      - "3005:3005"
+    environment:
+      - NODE_ENV=development
+      - PORT=3005
+    networks:
+      - linked-all-network
+
+  # Logistics Service
+  logistics:
+    build:
+      context: ../../services/logistics
+      dockerfile: Dockerfile
+    ports:
+      - "3006:3006"
+    environment:
+      - NODE_ENV=development
+      - PORT=3006
+    networks:
+      - linked-all-network
+
+  # Redis for caching and queues
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - linked-all-network
+
+  # Meilisearch for product search
+  meilisearch:
+    image: getmeili/meilisearch:v1.5
+    ports:
+      - "7700:7700"
+    environment:
+      - MEILI_ENV=development
+      - MEILI_MASTER_KEY=masterKey123
+    volumes:
+      - meilisearch-data:/meili_data
+    networks:
+      - linked-all-network
+
+volumes:
+  redis-data:
+  meilisearch-data:
+
+networks:
+  linked-all-network:
+    driver: bridge
