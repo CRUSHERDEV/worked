@@ -1,26 +1,13 @@
-import Fastify from "fastify";
-import { config as loadEnv } from "dotenv";
+﻿import Fastify from "fastify";
 
-loadEnv();
+const app = Fastify({ logger: true }); // let Fastify handle Pino internally
 
-const PORT = parseInt(process.env.PORT || "3006", 10);
+app.get("/", async () => ({ message: "Logistics Service running!" }));
 
-const fastify = Fastify({ logger: true });
-
-fastify.get("/health", async () => ({ status: "ok", service: "logistics" }));
-
-fastify.get("/shipments/:id", async (request) => {
-  const { id } = request.params as { id: string };
-  return {
-    message: `Get shipment ${id} - to be implemented`,
-    service: "logistics",
-  };
-});
-
-fastify.listen({ port: PORT, host: "0.0.0.0" }, (err) => {
+app.listen({ port: 3002 }, (err, address) => {
   if (err) {
-    fastify.log.error(err);
+    app.log.error(err);
     process.exit(1);
   }
-  console.log(`Logistics Service running on port ${PORT}`);
+  app.log.info(`Logistics Service running at ${address}`);
 });

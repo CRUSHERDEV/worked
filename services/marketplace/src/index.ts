@@ -1,23 +1,17 @@
-import Fastify from "fastify";
-import { config as loadEnv } from "dotenv";
+﻿import Fastify from "fastify";
+import pino from "pino";
 
-loadEnv();
+const logger = pino({ level: "info" });
+const app = Fastify({ logger });
 
-const PORT = parseInt(process.env.PORT || "3002", 10);
+app.get("/", async () => {
+  return { message: "Marketplace Service running!" };
+});
 
-const fastify = Fastify({ logger: true });
-
-fastify.get("/health", async () => ({ status: "ok", service: "marketplace" }));
-
-fastify.get("/products", async () => ({
-  message: "List products - to be implemented",
-  service: "marketplace",
-}));
-
-fastify.listen({ port: PORT, host: "0.0.0.0" }, (err) => {
+app.listen({ port: 3001 }, (err, address) => {
   if (err) {
-    fastify.log.error(err);
+    logger.error(err);
     process.exit(1);
   }
-  console.log(`Marketplace Service running on port ${PORT}`);
+  logger.info(`Marketplace Service running at ${address}`);
 });

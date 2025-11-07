@@ -1,23 +1,17 @@
-import Fastify from "fastify";
-import { config as loadEnv } from "dotenv";
+﻿import Fastify from "fastify";
+import pino from "pino";
 
-loadEnv();
+const logger = pino({ level: "info" });
+const app = Fastify({ logger });
 
-const PORT = parseInt(process.env.PORT || "3005", 10);
+app.get("/", async () => {
+  return { message: "Service running!" };
+});
 
-const fastify = Fastify({ logger: true });
-
-fastify.get("/health", async () => ({ status: "ok", service: "auth" }));
-
-fastify.post("/login", async () => ({
-  message: "Login - to be implemented",
-  service: "auth",
-}));
-
-fastify.listen({ port: PORT, host: "0.0.0.0" }, (err) => {
+app.listen({ port: 3000 }, (err, address) => {
   if (err) {
-    fastify.log.error(err);
+    logger.error(err);
     process.exit(1);
   }
-  console.log(`Auth Service running on port ${PORT}`);
+  logger.info(`Server running at ${address}`);
 });

@@ -1,23 +1,13 @@
-import Fastify from "fastify";
-import { config as loadEnv } from "dotenv";
+﻿import Fastify from "fastify";
 
-loadEnv();
+const app = Fastify({ logger: true }); // let Fastify handle Pino internally
 
-const PORT = parseInt(process.env.PORT || "3004", 10);
+app.get("/", async () => ({ message: "Wallet Service running!" }));
 
-const fastify = Fastify({ logger: true });
-
-fastify.get("/health", async () => ({ status: "ok", service: "wallet" }));
-
-fastify.get("/", async () => ({
-  message: "Get wallet - to be implemented",
-  service: "wallet",
-}));
-
-fastify.listen({ port: PORT, host: "0.0.0.0" }, (err) => {
+app.listen({ port: 3003 }, (err, address) => {
   if (err) {
-    fastify.log.error(err);
+    app.log.error(err);
     process.exit(1);
   }
-  console.log(`Wallet Service running on port ${PORT}`);
+  app.log.info(`Wallet Service running at ${address}`);
 });
