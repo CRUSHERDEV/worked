@@ -5,13 +5,15 @@ const logger = pino({ level: "info" });
 const app = Fastify({ logger });
 
 app.get("/", async () => {
-  return { message: "Service running!" };
+  return { message: "Auth Service running!" };
 });
 
-app.listen({ port: 3000 }, (err, address) => {
+const PORT = process.env.PORT || 3004;
+
+app.listen({ port: Number(PORT), host: "0.0.0.0" }, (err, address) => {
   if (err) {
     logger.error(err);
     process.exit(1);
   }
-  logger.info(`Server running at ${address}`);
+  logger.info(`Auth Service running at ${address}`);
 });
