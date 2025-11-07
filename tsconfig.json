@@ -1,0 +1,9 @@
+﻿{
+  "files": [],
+  "references": [
+    { "path": "packages/types" },
+    { "path": "packages/config" },
+    { "path": "packages/utils" },
+    { "path": "packages/ui" }
+  ]
+}
