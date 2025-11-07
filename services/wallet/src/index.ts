@@ -1,9 +1,10 @@
 import Fastify from "fastify";
 import cors from "@fastify/cors";
 import helmet from "@fastify/helmet";
-import { config as loadEnv } from "dotenv";
+import { loadEnvironmentVariables } from "@linked-all/utils";
 
-loadEnv();
+// Load environment variables from project root
+loadEnvironmentVariables();
 
 const PORT = parseInt(process.env.PORT || "3004", 10);
 const NODE_ENV = process.env.NODE_ENV || "development";
@@ -45,15 +46,20 @@ async function start() {
     }));
 
     // Placeholder routes - to be implemented
-    fastify.get("/api/v1/wallet/:userId", async () => ({
-      message: "Get wallet - to be implemented",
-      service: "wallet",
-    }));
+    fastify.register(
+      async (instance) => {
+        instance.get("/:userId", async () => ({
+          message: "Get wallet - to be implemented",
+          service: "wallet",
+        }));
 
-    fastify.get("/api/v1/wallet/:userId/transactions", async () => ({
-      message: "Get transactions - to be implemented",
-      service: "wallet",
-    }));
+        instance.get("/:userId/transactions", async () => ({
+          message: "Get transactions - to be implemented",
+          service: "wallet",
+        }));
+      },
+      { prefix: "/api/v1/wallet" }
+    );
 
     // Start server
     await fastify.listen({

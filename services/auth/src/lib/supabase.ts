@@ -1,7 +1,8 @@
 import { createClient } from "@supabase/supabase-js";
-import { config as loadEnv } from "dotenv";
+import { loadEnvironmentVariables } from "@linked-all/utils";
 
-loadEnv();
+// Load environment variables from project root
+loadEnvironmentVariables();
 
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY;

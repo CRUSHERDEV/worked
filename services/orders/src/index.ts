@@ -1,10 +1,11 @@
 import Fastify from "fastify";
 import cors from "@fastify/cors";
 import helmet from "@fastify/helmet";
-import { config as loadEnv } from "dotenv";
+import { loadEnvironmentVariables } from "@linked-all/utils";
 import { orderRoutes } from "./routes/orders";
 
-loadEnv();
+// Load environment variables from project root
+loadEnvironmentVariables();
 
 const PORT = parseInt(process.env.PORT || "3003", 10);
 const NODE_ENV = process.env.NODE_ENV || "development";
@@ -38,7 +39,7 @@ async function start() {
       contentSecurityPolicy: NODE_ENV === "production",
     });
 
-    // Register routes
+    // Register routes with API prefix
     await fastify.register(orderRoutes, { prefix: "/api/v1/orders" });
 
     // Health check

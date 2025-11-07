@@ -70,13 +70,34 @@ async function start() {
     // Register error handler
     fastify.setErrorHandler(errorHandler);
 
-    // Register routes
-    await fastify.register(routes, { prefix: "/api/v1" });
+    // Root route (before prefixed routes)
+    fastify.get("/", async () => {
+      return {
+        name: "Linked All API Gateway",
+        version: "1.0.0",
+        status: "running",
+        endpoints: {
+          health: "/health",
+          docs: "/docs",
+          api: "/api/v1",
+        },
+        services: {
+          auth: "/api/v1/auth",
+          marketplace: "/api/v1/products",
+          orders: "/api/v1/orders",
+          wallet: "/api/v1/wallet",
+          logistics: "/api/v1/logistics",
+        },
+      };
+    });
 
     // Health check
     fastify.get("/health", async () => {
       return { status: "ok", timestamp: new Date().toISOString() };
     });
+
+    // Register API routes with prefix
+    await fastify.register(routes, { prefix: "/api/v1" });
 
     // Start server
     await fastify.listen({

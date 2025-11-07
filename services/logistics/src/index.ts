@@ -1,9 +1,10 @@
 import Fastify from "fastify";
 import cors from "@fastify/cors";
 import helmet from "@fastify/helmet";
-import { config as loadEnv } from "dotenv";
+import { loadEnvironmentVariables } from "@linked-all/utils";
 
-loadEnv();
+// Load environment variables from project root
+loadEnvironmentVariables();
 
 const PORT = parseInt(process.env.PORT || "3006", 10);
 const NODE_ENV = process.env.NODE_ENV || "development";
@@ -45,13 +46,18 @@ async function start() {
     }));
 
     // Placeholder routes - to be implemented
-    fastify.get("/api/v1/logistics/shipments/:id", async (request) => {
-      const { id } = request.params as { id: string };
-      return {
-        message: `Get shipment ${id} - to be implemented`,
-        service: "logistics",
-      };
-    });
+    fastify.register(
+      async (instance) => {
+        instance.get("/shipments/:id", async (request) => {
+          const { id } = request.params as { id: string };
+          return {
+            message: `Get shipment ${id} - to be implemented`,
+            service: "logistics",
+          };
+        });
+      },
+      { prefix: "/api/v1/logistics" }
+    );
 
     // Start server
     await fastify.listen({

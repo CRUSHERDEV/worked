@@ -1,6 +1,7 @@
-import { config as loadEnv } from "dotenv";
+import { loadEnvironmentVariables } from "@linked-all/utils";
 
-loadEnv();
+// Load environment variables from project root
+loadEnvironmentVariables();
 
 export const config = {
   NODE_ENV: process.env.NODE_ENV || "development",

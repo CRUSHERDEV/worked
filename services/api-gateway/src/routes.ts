@@ -26,8 +26,9 @@ const services = {
   }),
 };
 
+
 /**
- * Proxy helper function
+ * Proxy helper function - properly extracts path and query
  */
 async function proxyRequest(
   service: keyof typeof services,
@@ -38,6 +39,8 @@ async function proxyRequest(
   const method = request.method.toLowerCase();
 
   try {
+    // targetPath already includes full path with query if present
+    // Just use it directly
     const response = await serviceClient.request({
       method: method as any,
       url: targetPath,
@@ -65,27 +68,26 @@ async function proxyRequest(
 }
 
 export async function routes(fastify: FastifyInstance) {
-  // API info endpoint
-  fastify.get("/", async () => {
-    return {
-      name: "Linked All API Gateway",
-      version: "1.0.0",
-      status: "running",
-      services: {
-        auth: "/api/v1/auth",
-        marketplace: "/api/v1/products",
-        orders: "/api/v1/orders",
-        wallet: "/api/v1/wallet",
-        logistics: "/api/v1/logistics",
-      },
-    };
+  // Auth routes (proxy to auth service)
+  // Use catch-all parameter pattern - matches /auth and /auth/*
+  fastify.all("/auth", async (request, reply) => {
+    try {
+      // Use raw.url to get full path including query string
+      const fullPath = request.raw.url || request.url;
+      const result = await proxyRequest("auth", request, fullPath);
+      return result;
+    } catch (error: any) {
+      reply.code(error.statusCode || 500).send({
+        success: false,
+        error: error.message,
+      });
+    }
   });
 
-  // Auth routes (proxy to auth service)
-  fastify.all("/api/v1/auth/*", async (request, reply) => {
+  fastify.all("/auth/*", async (request, reply) => {
     try {
-      const path = request.url.replace("/api/v1", "");
-      const result = await proxyRequest("auth", request, path);
+      const fullPath = request.raw.url || request.url;
+      const result = await proxyRequest("auth", request, fullPath);
       return result;
     } catch (error: any) {
       reply.code(error.statusCode || 500).send({
@@ -96,10 +98,23 @@ export async function routes(fastify: FastifyInstance) {
   });
 
   // Products/Marketplace routes (proxy to marketplace service)
-  fastify.all("/api/v1/products/*", async (request, reply) => {
+  fastify.all("/products", async (request, reply) => {
     try {
-      const path = request.url.replace("/api/v1", "");
-      const result = await proxyRequest("marketplace", request, path);
+      const fullPath = request.raw.url || request.url;
+      const result = await proxyRequest("marketplace", request, fullPath);
+      return result;
+    } catch (error: any) {
+      reply.code(error.statusCode || 500).send({
+        success: false,
+        error: error.message,
+      });
+    }
+  });
+
+  fastify.all("/products/*", async (request, reply) => {
+    try {
+      const fullPath = request.raw.url || request.url;
+      const result = await proxyRequest("marketplace", request, fullPath);
       return result;
     } catch (error: any) {
       reply.code(error.statusCode || 500).send({
@@ -110,10 +125,23 @@ export async function routes(fastify: FastifyInstance) {
   });
 
   // Order routes (proxy to order service)
-  fastify.all("/api/v1/orders/*", async (request, reply) => {
+  fastify.all("/orders", async (request, reply) => {
     try {
-      const path = request.url.replace("/api/v1", "");
-      const result = await proxyRequest("orders", request, path);
+      const fullPath = request.raw.url || request.url;
+      const result = await proxyRequest("orders", request, fullPath);
+      return result;
+    } catch (error: any) {
+      reply.code(error.statusCode || 500).send({
+        success: false,
+        error: error.message,
+      });
+    }
+  });
+
+  fastify.all("/orders/*", async (request, reply) => {
+    try {
+      const fullPath = request.raw.url || request.url;
+      const result = await proxyRequest("orders", request, fullPath);
       return result;
     } catch (error: any) {
       reply.code(error.statusCode || 500).send({
@@ -124,10 +152,23 @@ export async function routes(fastify: FastifyInstance) {
   });
 
   // Wallet routes (proxy to wallet service)
-  fastify.all("/api/v1/wallet/*", async (request, reply) => {
+  fastify.all("/wallet", async (request, reply) => {
     try {
-      const path = request.url.replace("/api/v1", "");
-      const result = await proxyRequest("wallet", request, path);
+      const fullPath = request.raw.url || request.url;
+      const result = await proxyRequest("wallet", request, fullPath);
+      return result;
+    } catch (error: any) {
+      reply.code(error.statusCode || 500).send({
+        success: false,
+        error: error.message,
+      });
+    }
+  });
+
+  fastify.all("/wallet/*", async (request, reply) => {
+    try {
+      const fullPath = request.raw.url || request.url;
+      const result = await proxyRequest("wallet", request, fullPath);
       return result;
     } catch (error: any) {
       reply.code(error.statusCode || 500).send({
@@ -138,10 +179,23 @@ export async function routes(fastify: FastifyInstance) {
   });
 
   // Logistics routes (proxy to logistics service)
-  fastify.all("/api/v1/logistics/*", async (request, reply) => {
+  fastify.all("/logistics", async (request, reply) => {
     try {
-      const path = request.url.replace("/api/v1", "");
-      const result = await proxyRequest("logistics", request, path);
+      const fullPath = request.raw.url || request.url;
+      const result = await proxyRequest("logistics", request, fullPath);
+      return result;
+    } catch (error: any) {
+      reply.code(error.statusCode || 500).send({
+        success: false,
+        error: error.message,
+      });
+    }
+  });
+
+  fastify.all("/logistics/*", async (request, reply) => {
+    try {
+      const fullPath = request.raw.url || request.url;
+      const result = await proxyRequest("logistics", request, fullPath);
       return result;
     } catch (error: any) {
       reply.code(error.statusCode || 500).send({
