@@ -60,7 +60,7 @@ jobs:
         run: terraform plan -var="environment=production" -out=tfplan
 
       - name: Upload Plan
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v5
         with:
           name: terraform-plan
           path: infrastructure/terraform/tfplan
