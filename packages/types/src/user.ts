@@ -1,4 +1,4 @@
-import type { UUID, Timestamp, Status, Country, Language, Address } from "./common";
+import type { UUID, Timestamp, Status, Country, Language, Currency, Address } from "./common";
 
 export enum UserRole {
   CONSUMER = "consumer",
