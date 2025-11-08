@@ -1,6 +1,7 @@
 // Navigation
 export { Header } from "./navigation/Header";
 export { Footer } from "./navigation/Footer";
+export { AuthNavigation } from "./navigation/AuthNavigation";
 
 // Sections
 export { HeroSection } from "./sections/HeroSection";
@@ -8,6 +9,10 @@ export { FeatureSection, FeaturesSection } from "./sections/FeatureSection";
 export { CapabilitiesSection } from "./sections/CapabilitiesSection";
 export { TestimonialSection } from "./sections/TestimonialSection";
 export { CTASection } from "./sections/CTASection";
+
+// Forms
+export { Input } from "./forms/Input";
+export { Button } from "./forms/Button";
 
 // Illustrations
 export { EcosystemIllustration } from "./illustrations/EcosystemIllustration";
