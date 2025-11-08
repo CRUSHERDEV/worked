@@ -3,9 +3,12 @@
 import { useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
+import { useCart } from "@/contexts/CartContext";
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { getItemCount } = useCart();
+  const itemCount = getItemCount();
 
   return (
     <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
@@ -27,6 +30,12 @@ export function Header() {
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center space-x-8">
             <Link
+              href="/products"
+              className="text-gray-600 hover:text-primary-600 font-medium transition-colors"
+            >
+              Products
+            </Link>
+            <Link
               href="#platform"
               className="text-gray-600 hover:text-primary-600 font-medium transition-colors"
             >
@@ -44,22 +53,34 @@ export function Header() {
             >
               Resources
             </Link>
-            <Link
-              href="#customers"
-              className="text-gray-600 hover:text-primary-600 font-medium transition-colors"
-            >
-              Customers
-            </Link>
-            <Link
-              href="#pricing"
-              className="text-gray-600 hover:text-primary-600 font-medium transition-colors"
-            >
-              Pricing
-            </Link>
           </div>
 
           {/* CTA Buttons */}
           <div className="hidden lg:flex items-center space-x-4">
+            {/* Cart Icon */}
+            <Link
+              href="/cart"
+              className="relative p-2 text-gray-600 hover:text-primary-600 transition-colors"
+            >
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+                />
+              </svg>
+              {itemCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-primary-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                  {itemCount > 9 ? "9+" : itemCount}
+                </span>
+              )}
+            </Link>
             <Link
               href="/login"
               className="text-gray-600 hover:text-primary-600 font-medium transition-colors"
@@ -71,12 +92,6 @@ export function Header() {
               className="px-4 py-2 bg-white border-2 border-primary-500 text-primary-600 rounded-lg font-semibold hover:bg-primary-50 transition-colors"
             >
               Get started free
-            </Link>
-            <Link
-              href="/demo"
-              className="px-4 py-2 bg-primary-500 text-white rounded-lg font-semibold hover:bg-primary-600 transition-colors shadow-sm"
-            >
-              Book a demo
             </Link>
           </div>
 
@@ -121,6 +136,13 @@ export function Header() {
               className="lg:hidden pb-4 space-y-2"
             >
               <Link
+                href="/products"
+                className="block py-2 text-gray-600 hover:text-primary-600"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Products
+              </Link>
+              <Link
                 href="#platform"
                 className="block py-2 text-gray-600 hover:text-primary-600"
                 onClick={() => setIsMenuOpen(false)}
@@ -142,18 +164,16 @@ export function Header() {
                 Resources
               </Link>
               <Link
-                href="#customers"
-                className="block py-2 text-gray-600 hover:text-primary-600"
+                href="/cart"
+                className="block py-2 text-gray-600 hover:text-primary-600 flex items-center justify-between"
                 onClick={() => setIsMenuOpen(false)}
               >
-                Customers
-              </Link>
-              <Link
-                href="#pricing"
-                className="block py-2 text-gray-600 hover:text-primary-600"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Pricing
+                <span>Cart</span>
+                {itemCount > 0 && (
+                  <span className="bg-primary-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                    {itemCount > 9 ? "9+" : itemCount}
+                  </span>
+                )}
               </Link>
               <div className="pt-4 border-t border-gray-200 space-y-2">
                 <Link

@@ -36,6 +36,8 @@ export const metadata: Metadata = {
   themeColor: "#0066FF",
 };
 
+import { CartProvider } from "@/contexts/CartContext";
+
 export default function RootLayout({
   children,
 }: {
@@ -43,7 +45,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${inter.variable} ${poppins.variable} ${jetbrainsMono.variable}`}>
-      <body className="font-sans antialiased">{children}</body>
+      <body className="font-sans antialiased">
+        <CartProvider>{children}</CartProvider>
+      </body>
     </html>
   );
 }

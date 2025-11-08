@@ -11,6 +11,7 @@ import {
   recordCacheMiss,
   recordCacheOperation,
 } from "@linked-all/monitoring";
+import { getSupabaseClient } from "../lib/supabase";
 
 export async function productsRoutes(fastify: FastifyInstance) {
   // Get all products (with caching)
@@ -52,14 +53,14 @@ export async function productsRoutes(fastify: FastifyInstance) {
       // Store in cache
       await CacheAside.set(
         cacheKey,
-        products,
+        transformedProducts,
         {
           ttl: 3600,
           prefix: "marketplace",
         }
       );
 
-      return products;
+      return transformedProducts;
     } catch (error: any) {
       fastify.log.error(error);
       reply.code(500).send({ error: "Failed to fetch products" });
@@ -86,28 +87,81 @@ export async function productsRoutes(fastify: FastifyInstance) {
       recordCacheMiss(cacheKey);
 
       // Fetch from database
-      // TODO: Replace with actual database query
-      const product = {
-        id,
-        name: "Sample Product",
-        price: 100,
-        description: "A sample product",
+      const supabase = getSupabaseClient();
+      
+      const { data: product, error } = await supabase
+        .from("products")
+        .select(`
+          *,
+          vendors:vendor_id (
+            id,
+            name,
+            rating
+          ),
+          categories:category_id (
+            id,
+            name,
+            slug
+          )
+        `)
+        .eq("id", id)
+        .eq("status", "active")
+        .single();
+
+      if (error) {
+        if (error.code === "PGRST116") {
+          reply.code(404).send({ error: "Product not found" });
+          return;
+        }
+        throw error;
+      }
+
+      if (!product) {
+        reply.code(404).send({ error: "Product not found" });
+        return;
+      }
+
+      // Transform the data
+      const transformedProduct = {
+        id: product.id,
+        name: product.name,
+        description: product.description,
+        price: product.price,
+        currency: product.currency || "USD",
+        image: product.images && product.images.length > 0 ? product.images[0] : null,
+        images: product.images || [],
+        category: product.categories?.name || product.category_id,
+        categoryId: product.category_id,
+        vendorId: product.vendor_id,
+        vendor: product.vendors ? {
+          id: product.vendors.id,
+          name: product.vendors.name,
+          rating: product.vendors.rating,
+        } : undefined,
+        stock: product.stock_quantity,
+        sku: product.sku,
+        rating: product.rating,
+        reviewCount: product.review_count,
+        tags: product.tags || [],
+        specifications: product.specifications || {},
+        createdAt: product.created_at,
+        updatedAt: product.updated_at,
       };
 
       // Store in cache
       await CacheAside.set(
         cacheKey,
-        product,
+        transformedProduct,
         {
           ttl: 1800,
           prefix: "marketplace",
         }
       );
 
-      return product;
+      return transformedProduct;
     } catch (error: any) {
       fastify.log.error(error);
-      reply.code(500).send({ error: "Failed to fetch product" });
+      reply.code(500).send({ error: "Failed to fetch product", details: error.message });
     }
   });
 
