@@ -18,18 +18,18 @@ export const colors = {
     900: "#001433",
   },
 
-  // Secondary Colors
+  // Secondary Colors (Yellow)
   secondary: {
-    50: "#FFF9E6",
-    100: "#FFF3CC",
-    200: "#FFE799",
-    300: "#FFDB66",
-    400: "#FFCF33",
-    500: "#F5B800", // Main secondary
-    600: "#C49300",
-    700: "#936E00",
-    800: "#624900",
-    900: "#312500",
+    50: "#FFFEF0",
+    100: "#FFFDE0",
+    200: "#FFFBC1",
+    300: "#FFF9A2",
+    400: "#FFF783",
+    500: "#FFD600", // Main secondary (from design system)
+    600: "#CCAB00",
+    700: "#998000",
+    800: "#665600",
+    900: "#332B00",
   },
 
   // Accent Colors
@@ -118,12 +118,12 @@ export const colors = {
     primary: "#FFFFFF",
     secondary: "#F9FAFB",
     tertiary: "#F3F4F6",
-    dark: "#111827",
+    dark: "#0A00A0", // Dark from design system
   },
 
   // Text Colors
   text: {
-    primary: "#111827",
+    primary: "#0A00A0", // Dark from design system
     secondary: "#6B7280",
     tertiary: "#9CA3AF",
     inverse: "#FFFFFF",

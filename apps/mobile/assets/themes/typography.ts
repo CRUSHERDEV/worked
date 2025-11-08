@@ -5,6 +5,7 @@
 
 export const typography = {
   fontFamily: {
+    // Primary fonts (from design system)
     regular: "Inter-Regular",
     medium: "Inter-Medium",
     semiBold: "Inter-SemiBold",
@@ -12,8 +13,14 @@ export const typography = {
     poppins: {
       regular: "Poppins-Regular",
       medium: "Poppins-Medium",
-      semiBold: "Poppins-SemiBold",
+      semiBold: "Poppins-SemiBold", // From design system
       bold: "Poppins-Bold",
+    },
+    mono: {
+      regular: "JetBrainsMono-Regular", // From design system
+      medium: "JetBrainsMono-Medium",
+      semiBold: "JetBrainsMono-SemiBold",
+      bold: "JetBrainsMono-Bold",
     },
     urbanist: {
       regular: "Urbanist-Regular",

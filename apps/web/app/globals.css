@@ -4,10 +4,11 @@
 
 @layer base {
   :root {
-    --color-primary: 0 102 255;
-    --color-secondary: 245 184 0;
-    --color-accent: 0 194 168;
-    --color-dark: 13 13 13;
+    /* Brand Colors (from design system guide) */
+    --color-primary: 0 102 255; /* #0066FF - Primary blue */
+    --color-secondary: 255 214 0; /* #FFD600 - Secondary yellow */
+    --color-accent: 0 194 168; /* #00C2A8 - Accent teal */
+    --color-dark: 10 0 160; /* #0A00A0 - Dark blue (from design system) */
     --color-background: 249 250 251;
   }
 
@@ -17,7 +18,23 @@
 
   body {
     @apply bg-background text-dark;
+    font-family: 'Inter', sans-serif;
     font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  /* Typography (from design system guide) */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600; /* SemiBold */
+  }
+
+  body, p, span {
+    font-family: 'Inter', sans-serif;
+    font-weight: 400; /* Regular */
+  }
+
+  code, pre {
+    font-family: 'JetBrains Mono', monospace;
   }
 }
 
