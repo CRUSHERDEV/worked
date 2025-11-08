@@ -36,19 +36,61 @@ export async function productsRoutes(fastify: FastifyInstance) {
 
       recordCacheMiss(cacheKey);
 
-      // If not in cache, fetch from database
-      // TODO: Replace with actual database query
+      // Fetch from database
       const dbStart = Date.now();
-      const products = [
-        {
-          id: "1",
-          name: "Sample Product",
-          price: 100,
-          description: "A sample product",
-        },
-      ];
+      const supabase = getSupabaseClient();
+      
+      const { data: products, error } = await supabase
+        .from("products")
+        .select(`
+          *,
+          vendors:vendor_id (
+            id,
+            name,
+            rating
+          ),
+          categories:category_id (
+            id,
+            name,
+            slug
+          )
+        `)
+        .eq("status", "active")
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        throw error;
+      }
+
       const dbDuration = Date.now() - dbStart;
       recordDbQuery("select", "products", dbDuration / 1000);
+
+      // Transform the data
+      const transformedProducts = (products || []).map((product: any) => ({
+        id: product.id,
+        name: product.name,
+        description: product.description,
+        price: product.price,
+        currency: product.currency || "USD",
+        image: product.images && product.images.length > 0 ? product.images[0] : null,
+        images: product.images || [],
+        category: product.categories?.name || product.category_id,
+        categoryId: product.category_id,
+        vendorId: product.vendor_id,
+        vendor: product.vendors ? {
+          id: product.vendors.id,
+          name: product.vendors.name,
+          rating: product.vendors.rating,
+        } : undefined,
+        stock: product.stock_quantity,
+        sku: product.sku,
+        rating: product.rating,
+        reviewCount: product.review_count,
+        tags: product.tags || [],
+        specifications: product.specifications || {},
+        createdAt: product.created_at,
+        updatedAt: product.updated_at,
+      }));
 
       // Store in cache
       await CacheAside.set(
@@ -63,7 +105,7 @@ export async function productsRoutes(fastify: FastifyInstance) {
       return transformedProducts;
     } catch (error: any) {
       fastify.log.error(error);
-      reply.code(500).send({ error: "Failed to fetch products" });
+      reply.code(500).send({ error: "Failed to fetch products", details: error.message });
     }
   });
 
