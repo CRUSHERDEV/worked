@@ -4,11 +4,10 @@
     "slug": "linked-all",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
-    "scheme": "linkedall",
+    "icon": "./assets/branding/logo/logo-icon.png",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/splash.png",
+      "image": "./assets/branding/logo/logo-primary.png",
       "resizeMode": "contain",
       "backgroundColor": "#0066FF"
     },
@@ -21,18 +20,31 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/branding/logo/logo-icon.png",
         "backgroundColor": "#0066FF"
       },
       "package": "com.linkedall.app"
     },
     "web": {
-      "bundler": "metro",
-      "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/branding/logo/logo-icon.png"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "./assets/fonts/Inter/Inter-Regular.ttf",
+            "./assets/fonts/Inter/Inter-Medium.ttf",
+            "./assets/fonts/Inter/Inter-SemiBold.ttf",
+            "./assets/fonts/Inter/Inter-Bold.ttf",
+            "./assets/fonts/Poppins/Poppins-Regular.ttf",
+            "./assets/fonts/Poppins/Poppins-Medium.ttf",
+            "./assets/fonts/Poppins/Poppins-SemiBold.ttf",
+            "./assets/fonts/Poppins/Poppins-Bold.ttf"
+          ]
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
