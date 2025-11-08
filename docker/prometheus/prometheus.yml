@@ -1,0 +1,45 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: 'api-gateway'
+    static_configs:
+      - targets: ['host.docker.internal:3001']
+        labels:
+          service: 'api-gateway'
+
+  - job_name: 'marketplace'
+    static_configs:
+      - targets: ['host.docker.internal:3002']
+        labels:
+          service: 'marketplace'
+
+  - job_name: 'orders'
+    static_configs:
+      - targets: ['host.docker.internal:3003']
+        labels:
+          service: 'orders'
+
+  - job_name: 'wallet'
+    static_configs:
+      - targets: ['host.docker.internal:3004']
+        labels:
+          service: 'wallet'
+
+  - job_name: 'auth'
+    static_configs:
+      - targets: ['host.docker.internal:3005']
+        labels:
+          service: 'auth'
+
+  - job_name: 'logistics'
+    static_configs:
+      - targets: ['host.docker.internal:3006']
+        labels:
+          service: 'logistics'
+
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+

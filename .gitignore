@@ -5,27 +5,18 @@ node_modules/
 
 # Testing
 coverage/
-.nyc_output/
+.nyc_output
 
 # Production
-dist/
 build/
-.next/
-out/
+dist/
+*.log
+*.tsbuildinfo
 
-# Misc
-.DS_Store
-*.pem
+# Environment variables
 .env
-.env*.local
-.turbo
-
-# Debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
+.env.local
+.env.*.local
 
 # IDE
 .vscode/
@@ -35,29 +26,15 @@ lerna-debug.log*
 *~
 
 # OS
+.DS_Store
 Thumbs.db
 
-# Expo
-.expo/
-.expo-shared/
-
-# Vercel
-.vercel
-
-# TypeScript
-*.tsbuildinfo
-next-env.d.ts
-
-# Supabase
-supabase/.branches
-supabase/.temp
-
-# Terraform
-.terraform/
-*.tfstate
-*.tfstate.*
-*.tfvars
-!example.tfvars
+# Turbo
+.turbo/
 
 # Docker
-.dockerignore
+docker-compose.override.yml
+
+# Monitoring data
+prometheus-data/
+grafana-data/

@@ -73,10 +73,13 @@ async function start() {
     // Register routes
     await fastify.register(routes, { prefix: "/api/v1" });
 
-    // Health check
-    fastify.get("/health", async () => {
-      return { status: "ok", timestamp: new Date().toISOString() };
-    });
+    // Register health and metrics routes
+    const { healthRoutes } = await import("./routes/health");
+    await fastify.register(healthRoutes);
+
+    // Register metrics middleware
+    const { metricsMiddleware } = await import("./middleware/metrics");
+    await fastify.addHook("onRequest", metricsMiddleware);
 
     // Start server
     await fastify.listen({
