@@ -26,7 +26,9 @@ export async function routes(fastify: FastifyInstance) {
       instance.all("/*", async (request: FastifyRequest, reply: FastifyReply) => {
         try {
           const path = (request.params as { "*"?: string })["*"] || "";
-          const url = `${config.MARKETPLACE_SERVICE_URL}/${path}`;
+          // Marketplace service routes are at /products, so we need to prepend that
+          const servicePath = path.startsWith("products") ? path : `products/${path}`;
+          const url = `${config.MARKETPLACE_SERVICE_URL}/${servicePath}`;
           const queryString = request.url.split("?")[1] || "";
           const fullUrl = queryString ? `${url}?${queryString}` : url;
 

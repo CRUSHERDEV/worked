@@ -12,7 +12,7 @@ app.get("/", async () => {
 });
 
 // Register routes
-app.register(productsRoutes);
+app.register(productsRoutes, { prefix: "/products" });
 
 // Health check
 app.get("/health", async (request, reply) => {
